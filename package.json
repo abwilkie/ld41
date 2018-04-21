@@ -1,0 +1,19 @@
+{
+  "name": "game",
+  "version": "1.0.0",
+  "description": "A game created for Ludum Dare 41",
+  "main": "deploy/index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "author": "Sam Backus",
+  "license": "MIT",
+  "devDependencies": {
+      "grunt-open": "~0.2.3",
+      "grunt": "~0.4.2",
+      "grunt-contrib-concat": "~0.3.0",
+      "grunt-contrib-watch": "~0.5.3",
+      "grunt-contrib-connect": "~0.6.0"
+  }
+}
