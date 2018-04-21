@@ -35,7 +35,10 @@ function preload() {
     this.load.image('coin', 'assets/coinGold.png');
     // player animations
     // this.load.atlas('player', 'assets/player.png', 'assets/player.json');
-    this.load.image('player', 'assets/octopus-1.png');
+    this.load.image('player1', 'assets/octopus-1.png');
+
+    this.load.image('player2', 'assets/dog-1.png');
+
 }
 
 function create() {
@@ -59,8 +62,8 @@ function create() {
     this.physics.world.bounds.height = groundLayer.height;
 
     // create the player sprite
-    players.push(this.physics.add.sprite(200, 200, 'player'));
-    players.push(this.physics.add.sprite(200, 200, 'player'));
+    players.push(this.physics.add.sprite(200, 200, 'player1'));
+    players.push(this.physics.add.sprite(200, 200, 'player2'));
     players.forEach((player, index) => {
         player.score = 0;
         player.setBounce(0.2); // our player will bounce from items
