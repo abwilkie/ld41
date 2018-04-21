@@ -16,14 +16,13 @@ module.exports = function (grunt) {
         },
         concat: {
             dist: {
-                src: [  "src/lib/**/*.js",
-                    "src/game/**/*.js"
+                src: [  "js/**/*.js"
                      ],
                 dest: 'deploy/js/<%= pkg.name %>.js'
             }
         },
         watch: {
-            files: 'src/**/*.js',
+            files: 'js/**/*.js',
             tasks: ['concat']
         },
         open: {
