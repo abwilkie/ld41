@@ -1,3 +1,18 @@
+var planet = {
+
+    preload: () => {
+
+    },
+
+    create: () => {
+
+    },
+
+    update: () => {
+
+    }
+};
+
 var config = {
     type: Phaser.AUTO,
     width: 800,
@@ -20,8 +35,10 @@ var config = {
 var game = new Phaser.Game(config);
 
 var map;
-var player;
+var players = [];
+var playerCursors = [];
 var cursors;
+var player2cursors;
 var groundLayer, coinLayer;
 var text;
 var score = 0;
@@ -29,7 +46,7 @@ var score = 0;
 function preload() {
     // map made with Tiled in JSON format
     this.load.tilemapTiledJSON('map', 'assets/map.json');
-    // tiles in spritesheet 
+    // tiles in spritesheet
     this.load.spritesheet('tiles', 'assets/tiles.png', {frameWidth: 70, frameHeight: 70});
     // simple coin image
     this.load.image('coin', 'assets/coinGold.png');
@@ -38,7 +55,7 @@ function preload() {
 }
 
 function create() {
-    // load the map 
+    // load the map
     map = this.make.tilemap({key: 'map'});
 
     // tiles for the ground layer
@@ -57,21 +74,25 @@ function create() {
     this.physics.world.bounds.width = groundLayer.width;
     this.physics.world.bounds.height = groundLayer.height;
 
-    // create the player sprite    
-    player = this.physics.add.sprite(200, 200, 'player');
-    player.setBounce(0.2); // our player will bounce from items
-    player.setCollideWorldBounds(true); // don't go out of the map    
-    
-    // small fix to our player images, we resize the physics body object slightly
-    player.body.setSize(player.width, player.height-8);
-    
-    // player will collide with the level tiles 
-    this.physics.add.collider(groundLayer, player);
+    // create the player sprite
+    players.push(this.physics.add.sprite(200, 200, 'player'));
+    players.push(this.physics.add.sprite(200, 200, 'player'));
+    players.forEach(player => {
+        player.setBounce(0.2); // our player will bounce from items
+        player.setCollideWorldBounds(true); // don't go out of the map
+        // small fix to our player images, we resize the physics body object slightly
+        player.body.setSize(player.width, player.height-8);
+        // player will collide with the level tiles
+        this.physics.add.collider(groundLayer, player);
+        // when the player overlaps with a tile with index 17, collectCoin
+        // will be called
+        this.physics.add.overlap(player, coinLayer);
+    });
+
+    // @TODO Add this to the above forEach loop when needing 3+ players.
+    this.physics.add.collider(players[0], players[1]);
 
     coinLayer.setTileIndexCallback(17, collectCoin, this);
-    // when the player overlaps with a tile with index 17, collectCoin 
-    // will be called    
-    this.physics.add.overlap(player, coinLayer);
 
     // player walk animation
     this.anims.create({
@@ -87,15 +108,20 @@ function create() {
         frameRate: 10,
     });
 
-
-    cursors = this.input.keyboard.createCursorKeys();
+    playerCursors.push(this.input.keyboard.createCursorKeys());
+    playerCursors.push(this.input.keyboard.addKeys({
+        up: Phaser.Input.Keyboard.KeyCodes.W,
+        down: Phaser.Input.Keyboard.KeyCodes.S,
+        left: Phaser.Input.Keyboard.KeyCodes.A,
+        right: Phaser.Input.Keyboard.KeyCodes.D,
+    }));
 
     // set bounds so the camera won't go outside the game world
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
     // make the camera follow the player
-    this.cameras.main.startFollow(player);
+    this.cameras.main.startFollow(players[0]);
 
-    // set background color, so the sky is not black    
+    // set background color, so the sky is not black
     this.cameras.main.setBackgroundColor('#ccccff');
 
     // this text will show the score
@@ -105,6 +131,41 @@ function create() {
     });
     // fix the text to the camera
     text.setScrollFactor(0);
+
+    this.time.addEvent({
+        delay: 0,
+        callbackScope: this,
+        callback: swapPlayers
+    });
+}
+
+function swapPlayers() {
+    // Gray out the background for a second
+    this.cameras.main.setBackgroundColor('#777777');
+
+    this.time.addEvent({
+        delay: 1000,
+        callbackScope: this,
+        callback: () => {
+            // Turn the background back to normal
+            this.cameras.main.setBackgroundColor('#ccccff');
+
+            // Swap player activity
+            // player1.active = !player1.active;
+            // player2.active = !player2.active;
+            // make the camera follow the active player
+            // this.cameras.main.startFollow(player);
+            //
+            // make inactive player gray(???)
+            //
+            // Create next swapPlayers event
+            this.time.addEvent({
+                delay: 3000,
+                callbackScope: this,
+                callback: swapPlayers
+            })
+        }
+    });
 }
 
 // this function will be called when the player touches a coin
@@ -116,24 +177,27 @@ function collectCoin(sprite, tile) {
 }
 
 function update(time, delta) {
-    if (cursors.left.isDown)
-    {
-        player.body.setVelocityX(-200);
-        player.anims.play('walk', true); // walk left
-        player.flipX = true; // flip the sprite to the left
-    }
-    else if (cursors.right.isDown)
-    {
-        player.body.setVelocityX(200);
-        player.anims.play('walk', true);
-        player.flipX = false; // use the original sprite looking to the right
-    } else {
-        player.body.setVelocityX(0);
-        player.anims.play('idle', true);
-    }
-    // jump 
-    if (cursors.up.isDown && player.body.onFloor())
-    {
-        player.body.setVelocityY(-500);        
-    }
+
+    players.forEach((player, index) => {
+        if (playerCursors[index].left.isDown)
+        {
+            player.body.setVelocityX(-200);
+            player.anims.play('walk', true); // walk left
+            player.flipX = true; // flip the sprite to the left
+        }
+        else if (playerCursors[index].right.isDown)
+        {
+            player.body.setVelocityX(200);
+            player.anims.play('walk', true);
+            player.flipX = false; // use the original sprite looking to the right
+        } else {
+            player.body.setVelocityX(0);
+            player.anims.play('idle', true);
+        }
+        // jump
+        if (playerCursors[index].up.isDown && player.body.onFloor())
+        {
+            player.body.setVelocityY(-500);
+        }
+    });
 }
