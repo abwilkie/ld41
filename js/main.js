@@ -34,7 +34,8 @@ function preload() {
     // simple coin image
     this.load.image('coin', 'assets/coinGold.png');
     // player animations
-    this.load.atlas('player', 'assets/player.png', 'assets/player.json');
+    // this.load.atlas('player', 'assets/player.png', 'assets/player.json');
+    this.load.image('player', 'assets/octopus-1.png');
 }
 
 function create() {
@@ -89,18 +90,18 @@ function create() {
     coinLayer.setTileIndexCallback(17, collectCoin, this);
 
     // player walk animation
-    this.anims.create({
-        key: 'walk',
-        frames: this.anims.generateFrameNames('player', {prefix: 'p1_walk', start: 1, end: 11, zeroPad: 2}),
-        frameRate: 10,
-        repeat: -1
-    });
-    // idle with only one frame, so repeat is not neaded
-    this.anims.create({
-        key: 'idle',
-        frames: [{key: 'player', frame: 'p1_stand'}],
-        frameRate: 10,
-    });
+    // this.anims.create({
+    //     key: 'walk',
+    //     frames: this.anims.generateFrameNames('player', {prefix: 'p1_walk', start: 1, end: 11, zeroPad: 2}),
+    //     frameRate: 10,
+    //     repeat: -1
+    // });
+    // // idle with only one frame, so repeat is not neaded
+    // this.anims.create({
+    //     key: 'idle',
+    //     frames: [{key: 'player', frame: 'p1_stand'}],
+    //     frameRate: 10,
+    // });
 
     playerCursors.push(this.input.keyboard.createCursorKeys());
     playerCursors.push(this.input.keyboard.addKeys({
@@ -183,17 +184,17 @@ function update(time, delta) {
         if (playerCursors[index].left.isDown)
         {
             player.body.setVelocityX(-200);
-            player.anims.play('walk', true); // walk left
+            // player.anims.play('walk', true); // walk left
             player.flipX = true; // flip the sprite to the left
         }
         else if (playerCursors[index].right.isDown)
         {
             player.body.setVelocityX(200);
-            player.anims.play('walk', true);
+            // player.anims.play('walk', true);
             player.flipX = false; // use the original sprite looking to the right
         } else {
             player.body.setVelocityX(0);
-            player.anims.play('idle', true);
+            // player.anims.play('idle', true);
         }
         // jump
         if (playerCursors[index].up.isDown && player.body.onFloor())
