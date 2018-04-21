@@ -37,11 +37,9 @@ var game = new Phaser.Game(config);
 var map;
 var players = [];
 var playerCursors = [];
+var playerTexts = [];
 var cursors;
-var player2cursors;
 var groundLayer, coinLayer;
-var text;
-var score = 0;
 
 function preload() {
     // map made with Tiled in JSON format
@@ -77,7 +75,8 @@ function create() {
     // create the player sprite
     players.push(this.physics.add.sprite(200, 200, 'player'));
     players.push(this.physics.add.sprite(200, 200, 'player'));
-    players.forEach(player => {
+    players.forEach((player, index) => {
+        player.score = 0;
         player.setBounce(0.2); // our player will bounce from items
         player.setCollideWorldBounds(true); // don't go out of the map
         // small fix to our player images, we resize the physics body object slightly
@@ -87,10 +86,20 @@ function create() {
         // when the player overlaps with a tile with index 17, collectCoin
         // will be called
         this.physics.add.overlap(player, coinLayer);
+
+        // this text will show the score
+        const text = this.add.text(20 * index, 570, '0', {
+            fontSize: '20px',
+            fill: '#ffffff'
+        });
+        // fix the text to the camera
+        text.setScrollFactor(0);
+        playerTexts.push(text);
     });
 
     // @TODO Add this to the above forEach loop when needing 3+ players.
     this.physics.add.collider(players[0], players[1]);
+    players[0].hasControl = true;
 
     coinLayer.setTileIndexCallback(17, collectCoin, this);
 
@@ -124,14 +133,6 @@ function create() {
     // set background color, so the sky is not black
     this.cameras.main.setBackgroundColor('#ccccff');
 
-    // this text will show the score
-    text = this.add.text(20, 570, '0', {
-        fontSize: '20px',
-        fill: '#ffffff'
-    });
-    // fix the text to the camera
-    text.setScrollFactor(0);
-
     this.time.addEvent({
         delay: 0,
         callbackScope: this,
@@ -143,6 +144,17 @@ function swapPlayers() {
     // Gray out the background for a second
     this.cameras.main.setBackgroundColor('#777777');
 
+    const playerInControlIndex = players.findIndex(player => player.hasControl);
+    players.forEach(player => {
+        player.hasControl = false;
+    });
+    // Enable the next player
+    const nextPlayerIndex = (playerInControlIndex + 1) % players.length;
+    // players[nextPlayerIndex].hasControl = true;
+    // make the camera follow the active player
+    this.cameras.main.startFollow(players[nextPlayerIndex]);
+
+
     this.time.addEvent({
         delay: 1000,
         callbackScope: this,
@@ -150,12 +162,11 @@ function swapPlayers() {
             // Turn the background back to normal
             this.cameras.main.setBackgroundColor('#ccccff');
 
+            players[nextPlayerIndex].hasControl = true;
+
             // Swap player activity
-            // player1.active = !player1.active;
-            // player2.active = !player2.active;
-            // make the camera follow the active player
-            // this.cameras.main.startFollow(player);
-            //
+            // players[0].hasControl = !players[0].hasControl;
+            // players[1].hasControl = !players[1].hasControl;
             // make inactive player gray(???)
             //
             // Create next swapPlayers event
@@ -171,14 +182,19 @@ function swapPlayers() {
 // this function will be called when the player touches a coin
 function collectCoin(sprite, tile) {
     coinLayer.removeTileAt(tile.x, tile.y); // remove the tile/coin
-    score++; // add 10 points to the score
-    text.setText(score); // set the text to show the current score
+    sprite.score++; // add 1 point to the score
+    const playerIndex = players.findIndex(player => player === sprite);
+    playerTexts[playerIndex].setText(sprite.score); // set the text to show the current score
     return false;
 }
 
 function update(time, delta) {
 
     players.forEach((player, index) => {
+        if (!player.hasControl && player.body.onFloor()) {
+            player.body.setVelocityX(0);
+            return;
+        }
         if (playerCursors[index].left.isDown)
         {
             player.body.setVelocityX(-200);
