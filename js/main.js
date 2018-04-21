@@ -34,11 +34,7 @@ function preload() {
     // simple coin image
     this.load.image('coin', 'assets/coinGold.png');
     // player animations
-    // this.load.atlas('player', 'assets/player.png', 'assets/player.json');
-    this.load.image('player1', 'assets/octopus-1.png');
-
-    this.load.image('player2', 'assets/dog-1.png');
-
+    this.load.atlas('player', 'assets/octosprite.png', 'assets/player.json');
 }
 
 function create() {
@@ -62,14 +58,14 @@ function create() {
     this.physics.world.bounds.height = groundLayer.height;
 
     // create the player sprite
-    players.push(this.physics.add.sprite(200, 200, 'player1'));
-    players.push(this.physics.add.sprite(200, 200, 'player2'));
+    players.push(this.physics.add.sprite(200, 200, 'player'));
+    players.push(this.physics.add.sprite(200, 200, 'player'));
     players.forEach((player, index) => {
         player.score = 0;
         player.setBounce(0.2); // our player will bounce from items
         player.setCollideWorldBounds(true); // don't go out of the map
         // small fix to our player images, we resize the physics body object slightly
-        player.body.setSize(player.width, player.height-8);
+        player.body.setSize(player.width-30, player.height-30);
         // player will collide with the level tiles
         this.physics.add.collider(groundLayer, player);
         // when the player overlaps with a tile with index 17, collectCoin
@@ -93,18 +89,18 @@ function create() {
     coinLayer.setTileIndexCallback(17, collectCoin, this);
 
     // player walk animation
-    // this.anims.create({
-    //     key: 'walk',
-    //     frames: this.anims.generateFrameNames('player', {prefix: 'p1_walk', start: 1, end: 11, zeroPad: 2}),
-    //     frameRate: 10,
-    //     repeat: -1
-    // });
-    // // idle with only one frame, so repeat is not neaded
-    // this.anims.create({
-    //     key: 'idle',
-    //     frames: [{key: 'player', frame: 'p1_stand'}],
-    //     frameRate: 10,
-    // });
+    this.anims.create({
+        key: 'walk',
+        frames: this.anims.generateFrameNames('player', {prefix: 'p1_walk', start: 1, end: 11, zeroPad: 2}),
+        frameRate: 10,
+        repeat: -1
+    });
+    // idle with only one frame, so repeat is not neaded
+    this.anims.create({
+        key: 'idle',
+        frames: [{key: 'player', frame: 'p1_stand'}],
+        frameRate: 10,
+    });
 
     playerCursors.push(this.input.keyboard.createCursorKeys());
     playerCursors.push(this.input.keyboard.addKeys({
@@ -187,17 +183,17 @@ function update(time, delta) {
         if (playerCursors[index].left.isDown)
         {
             player.body.setVelocityX(-200);
-            // player.anims.play('walk', true); // walk left
+            player.anims.play('walk', true); // walk left
             player.flipX = true; // flip the sprite to the left
         }
         else if (playerCursors[index].right.isDown)
         {
             player.body.setVelocityX(200);
-            // player.anims.play('walk', true);
+            player.anims.play('walk', true);
             player.flipX = false; // use the original sprite looking to the right
         } else {
             player.body.setVelocityX(0);
-            // player.anims.play('idle', true);
+            player.anims.play('idle', true);
         }
         // jump
         if (playerCursors[index].up.isDown && player.body.onFloor())
