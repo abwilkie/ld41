@@ -42,7 +42,7 @@ class Player {
     this.scene.physics.add.collider(this.sprite, fireLayer);
 
     // this text will show the score
-    const text = this.scene.add.text(20 * playerIndex, 570, '0', {
+    const text = this.scene.add.text(40 * playerIndex, 570, '0', {
         fontSize: '20px',
         fill: '#ffffff'
     });
