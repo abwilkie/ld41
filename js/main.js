@@ -152,6 +152,7 @@ function swapPlayers() {
 
             // Swap player activity
             players[nextPlayerIndex].hasControl = true;
+            players[nextPlayerIndex].turnTimer = 3000 + (scoreDeficit(players) * 200);
 
             // Swap the timers out
             turnLabelText.visible = false;
@@ -160,7 +161,7 @@ function swapPlayers() {
 
             // Create next swapPlayers event
             this.time.addEvent({
-                delay: 3000,
+                delay: currentPlayer().turnTimer,
                 callbackScope: this,
                 callback: swapPlayers
             })
@@ -186,6 +187,18 @@ function dieInAFire(sprite, tile) {
     return false;
 }
 
+function scoreDeficit(players) {
+    var deficit = 0;
+    players.forEach(player => {
+        if (player.hasControl) {
+            deficit -= player.score;
+        } else {
+            deficit += player.score;
+        }
+    });
+    return deficit;
+}
+
 function update(time, delta) {
     players.forEach((player, index) => {
       player.update(playerCursors[index]);
@@ -196,7 +209,7 @@ function update(time, delta) {
     if (players.every(player => !player.hasControl)) {
         msRemaining = 1000 - (time - lastTurnStartTime);
     } else {
-        msRemaining = 3000 - (time - lastTurnStartTime);
+        msRemaining = currentPlayer().turnTimer - (time - lastTurnStartTime);
     }
     const seconds = Math.floor(msRemaining / 1000).toFixed(0);
     let ms = (msRemaining % 1000).toFixed(0);
@@ -205,4 +218,8 @@ function update(time, delta) {
     }
     const timeDiffString = `${seconds}.${ms[0]}`;
     turnTimerText.setText(timeDiffString);
+}
+
+function currentPlayer() {
+    return players.find((player) => player.hasControl);
 }

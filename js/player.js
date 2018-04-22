@@ -2,6 +2,7 @@ class Player {
   constructor(scene) {
     this.sprite = scene.physics.add.sprite(200, 200, 'player');
     this.scene = scene;
+    this.turnTimer = 3000;
   }
 
   static preload(scene) {
