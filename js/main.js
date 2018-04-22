@@ -30,6 +30,10 @@ var turnLabelText;
 var lastTurnStartTime;
 var spawnPoints;
 var coinSound;
+var dieSound;
+var timeSinceGameStarted = 0;
+var totalCoins = 62;
+var coinsCollected = 0;
 
 function preload() {
     // 'this' === Scene object
@@ -47,6 +51,7 @@ function preload() {
     this.load.audio('jump', ['assets/jump.mp3']);
     this.load.audio('coin', ['assets/coin.mp3']);
     this.load.audio('shove', ['assets/shove.mp3']);
+    this.load.audio('die', ['assets/die.mp3']);
 
     Player.preload(this);
 }
@@ -80,14 +85,14 @@ function create() {
     /** end mapcreate.js */
 
     // create the player sprite
-    players.push(new Player(this));
-    players.push(new Player(this));
+    players.push(new Player(this, 1));
+    players.push(new Player(this, 2));
     players.forEach((player, index) => {
         player.create(groundLayer, coinLayer, fireLayer, index, playerTexts)
     });
 
     // @TODO Add this to the above forEach loop when needing 3+ players.
-    this.physics.add.collider(players[0].sprite, players[1].sprite);
+    this.physics.add.collider(players[0].sprite, players[1].sprite, octopusParty);
     players[0].hasControl = true;
 
     coinLayer.setTileIndexCallback(17, collectCoin, this);
@@ -134,6 +139,8 @@ function create() {
 
     // Create sounds
     coinSound = this.sound.add('coin',{loop: false});
+    dieSound = this.sound.add('die', {loop: false});
+    shoveSound = this.sound.add('shove', {loop: false });
 }
 
 function swapPlayers() {
@@ -183,6 +190,7 @@ function swapPlayers() {
 
 // this function will be called when the player touches a coin
 function collectCoin(sprite, tile) {
+    coinsCollected++;
     coinLayer.removeTileAt(tile.x, tile.y); // remove the tile/coin
     const playerIndex = players.findIndex(player => player.sprite === sprite);
     players[playerIndex].score++;
@@ -199,7 +207,18 @@ function dieInAFire(sprite, tile) {
     sprite.x = selectedSpawn.x;
     sprite.y = selectedSpawn.y;
     this.cameras.main.setBackgroundColor('#AA0000');
+    dieSound.play();
     return false;
+}
+
+function octopusParty(octo1, octo2) {
+  if (Math.abs(octo1.y - octo2.y) > 20 || timeSinceGameStarted < 1000) {
+    return false;
+  }
+  if (!shoveSound.isPlaying) {
+    shoveSound.play();
+  }
+  return false;
 }
 
 function scoreDeficit(players) {
@@ -215,6 +234,15 @@ function scoreDeficit(players) {
 }
 
 function update(time, delta) {
+    timeSinceGameStarted = time;
+
+    if (coinsCollected === totalCoins) {
+      // ???
+      console.log('coin');
+    }
+
+
+
     players.forEach((player, index) => {
       player.update(playerCursors[index]);
     });

@@ -1,6 +1,6 @@
 class Player {
-  constructor(scene) {
-    this.sprite = scene.physics.add.sprite(200, 200, 'player1');
+  constructor(scene, playerNumber) {
+    this.sprite = scene.physics.add.sprite(100 * playerNumber, 200, 'player1');
     this.scene = scene;
     this.turnTimer = 3000;
   }
