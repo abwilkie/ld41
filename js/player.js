@@ -9,6 +9,22 @@ class Player {
     scene.load.atlas('player', 'assets/octosprite.png', 'assets/player.json');
   }
 
+  static createAnims(scene){
+    // player walk animation
+    scene.anims.create({
+        key: 'walk',
+        frames: scene.anims.generateFrameNames('player', {prefix: 'p1_walk', start: 1, end: 11, zeroPad: 2}),
+        frameRate: 10,
+        repeat: -1
+    });
+    // idle with only one frame, so repeat is not neaded
+    scene.anims.create({
+        key: 'idle',
+        frames: [{key: 'player', frame: 'p1_stand'}],
+        frameRate: 10,
+    });
+  }
+
   create(groundLayer, coinLayer, playerIndex, playerTexts) {
     this.playerIndex = playerIndex;
     this.score = 0;
