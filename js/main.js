@@ -28,6 +28,7 @@ var groundLayer, coinLayer, fireLayer;
 var turnTimerText;
 var turnLabelText;
 var lastTurnStartTime;
+var spawnPoints;
 
 function preload() {
     // 'this' === Scene object
@@ -47,6 +48,7 @@ function create() {
     /** mapcreate.js */
     // load the map
     map = this.make.tilemap({key: 'map'});
+    spawnPoints = map.objects.find(objectLayer => objectLayer.name === 'Spawns');
 
     // tiles for the ground layer
     var groundTiles = map.addTilesetImage('tiles');
@@ -181,8 +183,9 @@ function collectCoin(sprite, tile) {
 // this function will be called when the player touches a fire
 function dieInAFire(sprite, tile) {
     const playerIndex = players.findIndex(player => player.sprite === sprite);
-    sprite.x = 200;
-    sprite.y = 200;
+    // find nearest spawnpoint
+    sprite.x = spawnPoints.objects[0].x;
+    sprite.y = spawnPoints.objects[0].y;
     this.cameras.main.setBackgroundColor('#AA0000');
     return false;
 }
