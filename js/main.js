@@ -50,8 +50,12 @@ function preload() {
     // load sfx
     this.load.audio('jump', ['assets/jump.mp3']);
     this.load.audio('coin', ['assets/coin.mp3']);
-    this.load.audio('shove', ['assets/shove.mp3']);
     this.load.audio('die', ['assets/die.mp3']);
+    this.load.audio('move1', ['assets/move1.mp3']);
+    this.load.audio('move2', ['assets/move2.mp3']);
+    this.load.audio('shove1', ['assets/shove1.mp3']);
+    this.load.audio('shove2', ['assets/shove2.mp3']);
+    this.load.audio('splat', ['assets/splat.mp3']);
 
     Player.preload(this);
 }
@@ -140,7 +144,10 @@ function create() {
     // Create sounds
     coinSound = this.sound.add('coin',{loop: false});
     dieSound = this.sound.add('die', {loop: false});
-    shoveSound = this.sound.add('shove', {loop: false });
+
+    this.shoveSounds = [
+
+    ];
 }
 
 function swapPlayers() {

@@ -58,6 +58,11 @@ class Player {
     playerTexts.push(text);
 
     this.jumpSound = this.scene.sound.add('jump',{loop: false});
+    this.moveSounds = [
+        this.scene.sound.add('move1', {loop: false}),
+        this.scene.sound.add('move2', {loop: false})
+    ];
+    this.currentMoveSoundIndex = 0;
 
   }
 
