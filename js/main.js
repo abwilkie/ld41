@@ -30,11 +30,13 @@ function preload() {
     // 'this' === Scene object
     // debugger;
     // map made with Tiled in JSON format
-    this.load.tilemapTiledJSON('map', 'assets/map.json');
+    this.load.tilemapTiledJSON('map', 'assets/map2.json');
     // tiles in spritesheet
     this.load.spritesheet('tiles', 'assets/replacementtiles.png', {frameWidth: 70, frameHeight: 70});
     // simple coin image
     this.load.image('coin', 'assets/coin.png');
+    // simple fire images
+    this.load.image('fire', 'assets/fire.png');
     Player.preload(this);
 }
 
@@ -54,6 +56,11 @@ function create() {
     var coinTiles = map.addTilesetImage('coin');
     // add coins as tiles
     coinLayer = map.createDynamicLayer('Coins', coinTiles, 0, 0);
+
+    // fire image used as tileset
+    var coinTiles = map.addTilesetImage('fire');
+    // add coins as tiles
+    coinLayer = map.createDynamicLayer('Hazards', coinTiles, 0, 0);
 
     // set the boundaries of our game world
     this.physics.world.bounds.width = groundLayer.width;
