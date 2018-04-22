@@ -30,7 +30,7 @@ function preload() {
     // 'this' === Scene object
     // debugger;
     // map made with Tiled in JSON format
-    this.load.tilemapTiledJSON('map', 'assets/map2.json');
+    this.load.tilemapTiledJSON('map', 'assets/map.json');
     // tiles in spritesheet
     this.load.spritesheet('tiles', 'assets/replacementtiles.png', {frameWidth: 70, frameHeight: 70});
     // simple coin image
