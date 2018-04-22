@@ -27,17 +27,19 @@ var cursors;
 var groundLayer, coinLayer;
 
 function preload() {
+    // 'this' === Scene object
+    // debugger;
     // map made with Tiled in JSON format
     this.load.tilemapTiledJSON('map', 'assets/map.json');
     // tiles in spritesheet
     this.load.spritesheet('tiles', 'assets/replacementtiles.png', {frameWidth: 70, frameHeight: 70});
     // simple coin image
     this.load.image('coin', 'assets/coin.png');
-    // player animations
-    this.load.atlas('player', 'assets/octosprite.png', 'assets/player.json');
+    Player.preload(this);
 }
 
 function create() {
+    /** mapcreate.js */
     // load the map
     map = this.make.tilemap({key: 'map'});
 
@@ -56,7 +58,9 @@ function create() {
     // set the boundaries of our game world
     this.physics.world.bounds.width = groundLayer.width;
     this.physics.world.bounds.height = groundLayer.height;
+    /** end mapcreate.js */
 
+    /** playercreate.js */
     // create the player sprite
     players.push(this.physics.add.sprite(200, 200, 'player'));
     players.push(this.physics.add.sprite(200, 200, 'player'));
@@ -109,7 +113,9 @@ function create() {
         left: Phaser.Input.Keyboard.KeyCodes.A,
         right: Phaser.Input.Keyboard.KeyCodes.D,
     }));
+    /** end playercreate.js */
 
+    /**  */
     // set bounds so the camera won't go outside the game world
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
     // make the camera follow the player
@@ -175,6 +181,7 @@ function collectCoin(sprite, tile) {
 
 function update(time, delta) {
 
+    /** playermanager.js */
     players.forEach((player, index) => {
         if (!player.hasControl && player.body.onFloor()) {
             player.body.setVelocityX(0);
@@ -201,4 +208,5 @@ function update(time, delta) {
             player.body.setVelocityY(-500);
         }
     });
+    /** end playermanager.js */
 }
