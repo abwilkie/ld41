@@ -29,6 +29,7 @@ var turnTimerText;
 var turnLabelText;
 var lastTurnStartTime;
 var spawnPoints;
+var coinSound;
 
 function preload() {
     // 'this' === Scene object
@@ -41,6 +42,12 @@ function preload() {
     this.load.image('coin', 'assets/coin.png');
     // simple fire images
     this.load.image('fire', 'assets/fire.png');
+
+    // load sfx
+    this.load.audio('jump', ['assets/jump.mp3']);
+    this.load.audio('coin', ['assets/coin.mp3']);
+    this.load.audio('shove', ['assets/shove.mp3']);
+
     Player.preload(this);
 }
 
@@ -124,6 +131,9 @@ function create() {
     });
     turnLabelText.setScrollFactor(0);
     turnLabelText.visible = false;
+
+    // Create sounds
+    coinSound = this.sound.add('coin',{loop: false});
 }
 
 function swapPlayers() {
@@ -177,6 +187,7 @@ function collectCoin(sprite, tile) {
     const playerIndex = players.findIndex(player => player.sprite === sprite);
     players[playerIndex].score++;
     playerTexts[playerIndex].setText(players[playerIndex].score); // set the text to show the current score
+    coinSound.play();
     return false;
 }
 

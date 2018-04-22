@@ -56,6 +56,9 @@ class Player {
     // fix the text to the camera
     text.setScrollFactor(0);
     playerTexts.push(text);
+
+    this.jumpSound = this.scene.sound.add('jump',{loop: false});
+
   }
 
   update(cursor) {
@@ -81,6 +84,7 @@ class Player {
     // jump
     if (cursor.up.isDown && this.sprite.body.onFloor())
     {
+        this.jumpSound.play();;
         this.sprite.body.setVelocityY(-500);
     }
   }
