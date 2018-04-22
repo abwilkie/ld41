@@ -240,27 +240,26 @@ function update(time, delta) {
       // ???
       console.log('coin');
     }
+    else {
+      players.forEach((player, index) => {
+        player.update(playerCursors[index]);
+      });
 
-
-
-    players.forEach((player, index) => {
-      player.update(playerCursors[index]);
-    });
-
-    // Update counter to show turn time remaining.
-    let msRemaining;
-    if (players.every(player => !player.hasControl)) {
-        msRemaining = 1000 - (time - lastTurnStartTime);
-    } else {
-        msRemaining = currentPlayer().turnTimer - (time - lastTurnStartTime);
+      // Update counter to show turn time remaining.
+      let msRemaining;
+      if (players.every(player => !player.hasControl)) {
+          msRemaining = 1000 - (time - lastTurnStartTime);
+      } else {
+          msRemaining = currentPlayer().turnTimer - (time - lastTurnStartTime);
+      }
+      const seconds = Math.floor(msRemaining / 1000).toFixed(0);
+      let ms = (msRemaining % 1000).toFixed(0);
+      if (ms.length < 3) {
+          ms = [0];
+      }
+      const timeDiffString = `${seconds}.${ms[0]}`;
+      turnTimerText.setText(timeDiffString);
     }
-    const seconds = Math.floor(msRemaining / 1000).toFixed(0);
-    let ms = (msRemaining % 1000).toFixed(0);
-    if (ms.length < 3) {
-        ms = [0];
-    }
-    const timeDiffString = `${seconds}.${ms[0]}`;
-    turnTimerText.setText(timeDiffString);
 }
 
 function currentPlayer() {
