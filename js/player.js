@@ -75,6 +75,7 @@ class Player {
 
     if (!this.hasControl && this.sprite.body.onFloor()) {
         this.sprite.body.setVelocityX(0);
+        this.lastFrameWasOnGround = true;
         return;
     }
     if (cursor.left.isDown)
@@ -82,9 +83,15 @@ class Player {
         this.sprite.body.setVelocityX(-200);
         this.sprite.anims.play(`walk${this.playerIndex}`, true); // walk left
         this.sprite.flipX = true; // flip the sprite to the left
+        if (!this.moveSounds[this.playerIndex].isPlaying) {
+          this.moveSounds[this.playerIndex].play();
+        }
     }
     else if (cursor.right.isDown)
     {
+        if (!this.moveSounds[this.playerIndex].isPlaying) {
+          this.moveSounds[this.playerIndex].play();
+        }
         this.sprite.body.setVelocityX(200);
         this.sprite.anims.play(`walk${this.playerIndex}`, true);
         this.sprite.flipX = false; // use the original sprite looking to the right
