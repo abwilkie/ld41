@@ -34,6 +34,8 @@ var dieSound;
 var timeSinceGameStarted = 0;
 var totalCoins = 62;
 var coinsCollected = 0;
+var shoveSounds;
+var shoveSoundIndex;
 
 function preload() {
     // 'this' === Scene object
@@ -144,10 +146,11 @@ function create() {
     // Create sounds
     coinSound = this.sound.add('coin',{loop: false});
     dieSound = this.sound.add('die', {loop: false});
-
-    this.shoveSounds = [
-
+    shoveSounds = [
+        this.sound.add('shove1', {loop: false}),
+        this.sound.add('shove2', {loop: false})
     ];
+    shoveSoundIndex = 0;
 }
 
 function swapPlayers() {
@@ -218,12 +221,18 @@ function dieInAFire(sprite, tile) {
     return false;
 }
 
+function shoveSoundIsPlaying() {
+    return shoveSounds.some(sound => sound.isPlaying)
+}
+
 function octopusParty(octo1, octo2) {
   if (Math.abs(octo1.y - octo2.y) > 20 || timeSinceGameStarted < 1000) {
     return false;
   }
-  if (!shoveSound.isPlaying) {
-    shoveSound.play();
+  if (!shoveSoundIsPlaying()) {
+    shoveSoundIndex++;
+    shoveSoundIndex = shoveSoundIndex % shoveSounds.length;
+    shoveSounds[shoveSoundIndex].play();
   }
   return false;
 }
