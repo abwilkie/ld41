@@ -184,8 +184,9 @@ function collectCoin(sprite, tile) {
 function dieInAFire(sprite, tile) {
     const playerIndex = players.findIndex(player => player.sprite === sprite);
     // find nearest spawnpoint
-    sprite.x = spawnPoints.objects[0].x;
-    sprite.y = spawnPoints.objects[0].y;
+    const selectedSpawn = spawnPoints.objects[Math.floor(Math.random()*spawnPoints.objects.length)];
+    sprite.x = selectedSpawn.x;
+    sprite.y = selectedSpawn.y;
     this.cameras.main.setBackgroundColor('#AA0000');
     return false;
 }
