@@ -25,7 +25,7 @@ class Player {
     });
   }
 
-  create(groundLayer, coinLayer, playerIndex, playerTexts) {
+  create(groundLayer, coinLayer, fireLayer, playerIndex, playerTexts) {
     this.playerIndex = playerIndex;
     this.score = 0;
     this.sprite.setBounce(0.2); // our player will bounce from items
@@ -37,6 +37,9 @@ class Player {
     // when the player overlaps with a tile with index 17, collectCoin
     // will be called
     this.scene.physics.add.overlap(this.sprite, coinLayer);
+    // when the player overlaps with a tile with index 18, dieInAFire
+    // will be called
+    this.scene.physics.add.collider(this.sprite, fireLayer);
 
     // this text will show the score
     const text = this.scene.add.text(20 * playerIndex, 570, '0', {

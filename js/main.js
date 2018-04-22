@@ -24,7 +24,7 @@ var players = [];
 var playerCursors = [];
 var playerTexts = [];
 var cursors;
-var groundLayer, coinLayer;
+var groundLayer, coinLayer, fireLayer;
 
 function preload() {
     // 'this' === Scene object
@@ -58,9 +58,9 @@ function create() {
     coinLayer = map.createDynamicLayer('Coins', coinTiles, 0, 0);
 
     // fire image used as tileset
-    var coinTiles = map.addTilesetImage('fire');
+    var fireTiles = map.addTilesetImage('fire');
     // add coins as tiles
-    coinLayer = map.createDynamicLayer('Hazards', coinTiles, 0, 0);
+    fireLayer = map.createDynamicLayer('Hazards', fireTiles, 0, 0);
 
     // set the boundaries of our game world
     this.physics.world.bounds.width = groundLayer.width;
@@ -71,7 +71,7 @@ function create() {
     players.push(new Player(this));
     players.push(new Player(this));
     players.forEach((player, index) => {
-        player.create(groundLayer, coinLayer, index, playerTexts)
+        player.create(groundLayer, coinLayer, fireLayer, index, playerTexts)
     });
 
     // @TODO Add this to the above forEach loop when needing 3+ players.
@@ -79,6 +79,7 @@ function create() {
     players[0].hasControl = true;
 
     coinLayer.setTileIndexCallback(17, collectCoin, this);
+    fireLayer.setTileIndexCallback(19, dieInAFire, this);
 
     Player.createAnims(this)
 
@@ -148,6 +149,13 @@ function collectCoin(sprite, tile) {
     const playerIndex = players.findIndex(player => player.sprite === sprite);
     players[playerIndex].score++;
     playerTexts[playerIndex].setText(players[playerIndex].score); // set the text to show the current score
+    return false;
+}
+
+// this function will be called when the player touches a fire
+function dieInAFire(sprite, tile) {
+    const playerIndex = players.findIndex(player => player.sprite === sprite);
+    playerTexts[playerIndex].setText("You are dead"); // you don't have a score if you die
     return false;
 }
 
