@@ -155,7 +155,9 @@ function collectCoin(sprite, tile) {
 // this function will be called when the player touches a fire
 function dieInAFire(sprite, tile) {
     const playerIndex = players.findIndex(player => player.sprite === sprite);
-    playerTexts[playerIndex].setText("You are dead"); // you don't have a score if you die
+    sprite.x = 200;
+    sprite.y = 200;
+    this.cameras.main.setBackgroundColor('#AA0000');
     return false;
 }
 
