@@ -32,7 +32,30 @@ class Player {
     playerTexts.push(text);
   }
 
-  update() {
-
+  update(cursor) {
+    if (!this.hasControl && this.sprite.body.onFloor()) {
+        this.sprite.body.setVelocityX(0);
+        return;
+    }
+    if (cursor.left.isDown)
+    {
+        this.sprite.body.setVelocityX(-200);
+        this.sprite.anims.play('walk', true); // walk left
+        this.sprite.flipX = true; // flip the sprite to the left
+    }
+    else if (cursor.right.isDown)
+    {
+        this.sprite.body.setVelocityX(200);
+        this.sprite.anims.play('walk', true);
+        this.sprite.flipX = false; // use the original sprite looking to the right
+    } else {
+        this.sprite.body.setVelocityX(0);
+        this.sprite.anims.play('idle', true);
+    }
+    // jump
+    if (cursor.up.isDown && this.sprite.body.onFloor())
+    {
+        this.sprite.body.setVelocityY(-500);
+    }
   }
 }

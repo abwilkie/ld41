@@ -180,30 +180,7 @@ function update(time, delta) {
 
     /** playermanager.js */
     players.forEach((player, index) => {
-        if (!player.hasControl && player.sprite.body.onFloor()) {
-            player.sprite.body.setVelocityX(0);
-            return;
-        }
-        if (playerCursors[index].left.isDown)
-        {
-            player.sprite.body.setVelocityX(-200);
-            player.sprite.anims.play('walk', true); // walk left
-            player.sprite.flipX = true; // flip the sprite to the left
-        }
-        else if (playerCursors[index].right.isDown)
-        {
-            player.sprite.body.setVelocityX(200);
-            player.sprite.anims.play('walk', true);
-            player.sprite.flipX = false; // use the original sprite looking to the right
-        } else {
-            player.sprite.body.setVelocityX(0);
-            player.sprite.anims.play('idle', true);
-        }
-        // jump
-        if (playerCursors[index].up.isDown && player.sprite.body.onFloor())
-        {
-            player.sprite.body.setVelocityY(-500);
-        }
+      player.update(playerCursors[index]);
     });
     /** end playermanager.js */
 }
@@ -242,7 +219,30 @@ class Player {
     playerTexts.push(text);
   }
 
-  update() {
-
+  update(cursor) {
+    if (!this.hasControl && this.sprite.body.onFloor()) {
+        this.sprite.body.setVelocityX(0);
+        return;
+    }
+    if (cursor.left.isDown)
+    {
+        this.sprite.body.setVelocityX(-200);
+        this.sprite.anims.play('walk', true); // walk left
+        this.sprite.flipX = true; // flip the sprite to the left
+    }
+    else if (cursor.right.isDown)
+    {
+        this.sprite.body.setVelocityX(200);
+        this.sprite.anims.play('walk', true);
+        this.sprite.flipX = false; // use the original sprite looking to the right
+    } else {
+        this.sprite.body.setVelocityX(0);
+        this.sprite.anims.play('idle', true);
+    }
+    // jump
+    if (cursor.up.isDown && this.sprite.body.onFloor())
+    {
+        this.sprite.body.setVelocityY(-500);
+    }
   }
 }

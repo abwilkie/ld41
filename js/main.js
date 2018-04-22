@@ -165,30 +165,7 @@ function update(time, delta) {
 
     /** playermanager.js */
     players.forEach((player, index) => {
-        if (!player.hasControl && player.sprite.body.onFloor()) {
-            player.sprite.body.setVelocityX(0);
-            return;
-        }
-        if (playerCursors[index].left.isDown)
-        {
-            player.sprite.body.setVelocityX(-200);
-            player.sprite.anims.play('walk', true); // walk left
-            player.sprite.flipX = true; // flip the sprite to the left
-        }
-        else if (playerCursors[index].right.isDown)
-        {
-            player.sprite.body.setVelocityX(200);
-            player.sprite.anims.play('walk', true);
-            player.sprite.flipX = false; // use the original sprite looking to the right
-        } else {
-            player.sprite.body.setVelocityX(0);
-            player.sprite.anims.play('idle', true);
-        }
-        // jump
-        if (playerCursors[index].up.isDown && player.sprite.body.onFloor())
-        {
-            player.sprite.body.setVelocityY(-500);
-        }
+      player.update(playerCursors[index]);
     });
     /** end playermanager.js */
 }
