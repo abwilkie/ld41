@@ -25,6 +25,9 @@ var playerCursors = [];
 var playerTexts = [];
 var cursors;
 var groundLayer, coinLayer, fireLayer;
+var turnTimerText;
+var turnLabelText;
+var lastTurnStartTime;
 
 function preload() {
     // 'this' === Scene object
@@ -105,6 +108,20 @@ function create() {
         callbackScope: this,
         callback: swapPlayers
     });
+
+    turnTimerText = this.add.text(680, 20, '3000', {
+        fontSize: '40px',
+        fill: '#ffffff'
+    });
+    // fix the text to the camera
+    turnTimerText.setScrollFactor(0);
+
+    turnLabelText = this.add.text(400, 300, 'Player 1', {
+        fontSize: '40px',
+        fill: '#ffffff'
+    });
+    turnLabelText.setScrollFactor(0);
+    turnLabelText.visible = false;
 }
 
 function swapPlayers() {
@@ -121,6 +138,10 @@ function swapPlayers() {
     // make the camera follow the active player
     this.cameras.main.startFollow(players[nextPlayerIndex].sprite);
 
+    // Label the next turn and start a countdown
+    turnLabelText.setText(`Player ${nextPlayerIndex + 1}`)
+    turnLabelText.visible = true;
+    lastTurnStartTime = this.time.now;
 
     this.time.addEvent({
         delay: 1000,
@@ -131,11 +152,16 @@ function swapPlayers() {
 
             // Swap player activity
             players[nextPlayerIndex].hasControl = true;
+            players[nextPlayerIndex].turnTimer = 3000 + (scoreDeficit(players) * 200);
+
+            // Swap the timers out
+            turnLabelText.visible = false;
+            lastTurnStartTime = this.time.now;
 
 
             // Create next swapPlayers event
             this.time.addEvent({
-                delay: 3000,
+                delay: currentPlayer().turnTimer,
                 callbackScope: this,
                 callback: swapPlayers
             })
@@ -161,9 +187,39 @@ function dieInAFire(sprite, tile) {
     return false;
 }
 
-function update(time, delta) {
+function scoreDeficit(players) {
+    var deficit = 0;
+    players.forEach(player => {
+        if (player.hasControl) {
+            deficit -= player.score;
+        } else {
+            deficit += player.score;
+        }
+    });
+    return deficit;
+}
 
+function update(time, delta) {
     players.forEach((player, index) => {
       player.update(playerCursors[index]);
     });
+
+    // Update counter to show turn time remaining.
+    let msRemaining;
+    if (players.every(player => !player.hasControl)) {
+        msRemaining = 1000 - (time - lastTurnStartTime);
+    } else {
+        msRemaining = currentPlayer().turnTimer - (time - lastTurnStartTime);
+    }
+    const seconds = Math.floor(msRemaining / 1000).toFixed(0);
+    let ms = (msRemaining % 1000).toFixed(0);
+    if (ms.length < 3) {
+        ms = [0];
+    }
+    const timeDiffString = `${seconds}.${ms[0]}`;
+    turnTimerText.setText(timeDiffString);
+}
+
+function currentPlayer() {
+    return players.find((player) => player.hasControl);
 }
