@@ -28,12 +28,13 @@ var groundLayer, coinLayer, fireLayer;
 var turnTimerText;
 var turnLabelText;
 var lastTurnStartTime;
+var spawnPoints;
 
 function preload() {
     // 'this' === Scene object
     // debugger;
     // map made with Tiled in JSON format
-    this.load.tilemapTiledJSON('map', 'assets/map.json');
+    this.load.tilemapTiledJSON('map', 'assets/map2pointoh.json');
     // tiles in spritesheet
     this.load.spritesheet('tiles', 'assets/replacementtiles.png', {frameWidth: 70, frameHeight: 70});
     // simple coin image
@@ -47,6 +48,7 @@ function create() {
     /** mapcreate.js */
     // load the map
     map = this.make.tilemap({key: 'map'});
+    spawnPoints = map.objects.find(objectLayer => objectLayer.name === 'Spawns');
 
     // tiles for the ground layer
     var groundTiles = map.addTilesetImage('tiles');
@@ -181,8 +183,10 @@ function collectCoin(sprite, tile) {
 // this function will be called when the player touches a fire
 function dieInAFire(sprite, tile) {
     const playerIndex = players.findIndex(player => player.sprite === sprite);
-    sprite.x = 200;
-    sprite.y = 200;
+    // find nearest spawnpoint
+    const selectedSpawn = spawnPoints.objects[Math.floor(Math.random()*spawnPoints.objects.length)];
+    sprite.x = selectedSpawn.x;
+    sprite.y = selectedSpawn.y;
     this.cameras.main.setBackgroundColor('#AA0000');
     return false;
 }
