@@ -3,6 +3,7 @@ class Player {
     this.sprite = scene.physics.add.sprite(100 * playerNumber, 200, 'player1');
     this.scene = scene;
     this.turnTimer = 3000;
+    this.lastFrameWasOnGround = false;
   }
 
   static preload(scene) {
@@ -58,6 +59,7 @@ class Player {
     playerTexts.push(text);
 
     this.jumpSound = this.scene.sound.add('jump',{loop: false});
+    this.splatSound = this.scene.sound.add('splat', {loop: false});
     this.moveSounds = [
         this.scene.sound.add('move1', {loop: false}),
         this.scene.sound.add('move2', {loop: false})
@@ -67,6 +69,10 @@ class Player {
   }
 
   update(cursor) {
+    if (this.sprite.body.onFloor() && !this.lastFrameWasOnGround) {
+        this.splatSound.play();
+    }
+
     if (!this.hasControl && this.sprite.body.onFloor()) {
         this.sprite.body.setVelocityX(0);
         return;
@@ -91,6 +97,12 @@ class Player {
     {
         this.jumpSound.play();;
         this.sprite.body.setVelocityY(-500);
+    }
+
+    if (this.sprite.body.onFloor()) {
+        this.lastFrameWasOnGround = true;
+    } else {
+        this.lastFrameWasOnGround = false;
     }
   }
 }
