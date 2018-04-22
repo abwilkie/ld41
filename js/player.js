@@ -6,15 +6,15 @@ class Player {
 
   static preload(scene) {
     // player animations
-    scene.load.atlas('player1', 'assets/octosprite-purple.png', 'assets/player.json');
-    scene.load.atlas('player2', 'assets/octosprite-olive.png', 'assets/player.json');
+    scene.load.atlas('player0', 'assets/octosprite-purple.png', 'assets/player.json');
+    scene.load.atlas('player1', 'assets/octosprite-olive.png', 'assets/player.json');
 
   }
 
   static createAnims(scene){
     // player walk animation
-    var i = 1
-    for (i = 1; i < 3; i++)
+    var i = 0
+    for (i = 0; i < 2; i++)
     {
         scene.anims.create({
             key: `walk${i}`,
@@ -65,17 +65,17 @@ class Player {
     if (cursor.left.isDown)
     {
         this.sprite.body.setVelocityX(-200);
-        this.sprite.anims.play(`walk${this.playerIndex + 1}`, true); // walk left
+        this.sprite.anims.play(`walk${this.playerIndex}`, true); // walk left
         this.sprite.flipX = true; // flip the sprite to the left
     }
     else if (cursor.right.isDown)
     {
         this.sprite.body.setVelocityX(200);
-        this.sprite.anims.play(`walk${this.playerIndex + 1}`, true);
+        this.sprite.anims.play(`walk${this.playerIndex}`, true);
         this.sprite.flipX = false; // use the original sprite looking to the right
     } else {
         this.sprite.body.setVelocityX(0);
-        this.sprite.anims.play(`idle${this.playerIndex + 1}`, true);
+        this.sprite.anims.play(`idle${this.playerIndex}`, true);
     }
     // jump
     if (cursor.up.isDown && this.sprite.body.onFloor())
