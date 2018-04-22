@@ -27,6 +27,7 @@ var cursors;
 var groundLayer, coinLayer, fireLayer;
 var turnTimerText;
 var turnLabelText;
+var helpText;
 var lastTurnStartTime;
 var spawnPoints;
 var coinSound;
@@ -138,10 +139,20 @@ function create() {
 
     turnLabelText = this.add.text(400, 300, 'Player 1', {
         fontSize: '40px',
-        fill: '#ffffff'
+        fill: '#ffffff',
+        align: 'center'
     });
     turnLabelText.setScrollFactor(0);
     turnLabelText.visible = false;
+    turnLabelText.originX = 0.5;
+
+    helpText = this.add.text(400, 350, 'Arrow Keys', {
+        fontSize: '40px',
+        fill: '#ffffff',
+        align: 'center'
+    });
+    helpText.setScrollFactor(0);
+    helpText.originX = 0.5;
 
     // Create sounds
     coinSound = this.sound.add('coin',{loop: false});
@@ -170,6 +181,14 @@ function swapPlayers() {
     // Label the next turn and start a countdown
     turnLabelText.setText(`Player ${nextPlayerIndex + 1}`)
     turnLabelText.visible = true;
+
+    if (nextPlayerIndex === 0) {
+        helpText.setText('⇧\n⇦  ⇨');
+    } else {
+        helpText.setText('W\nA  D');
+    }
+    helpText.visible = true;
+
     lastTurnStartTime = this.time.now;
 
     this.time.addEvent({
@@ -185,6 +204,7 @@ function swapPlayers() {
 
             // Swap the timers out
             turnLabelText.visible = false;
+            helpText.visible = false;
             lastTurnStartTime = this.time.now;
 
 
