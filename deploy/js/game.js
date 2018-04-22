@@ -75,7 +75,6 @@ function create() {
     this.physics.world.bounds.height = groundLayer.height;
     /** end mapcreate.js */
 
-    /** playercreate.js */
     // create the player sprite
     players.push(new Player(this));
     players.push(new Player(this));
@@ -98,7 +97,6 @@ function create() {
         left: Phaser.Input.Keyboard.KeyCodes.A,
         right: Phaser.Input.Keyboard.KeyCodes.D,
     }));
-    /** end playercreate.js */
 
     /**  */
     // set bounds so the camera won't go outside the game world
@@ -138,13 +136,10 @@ function swapPlayers() {
             // Turn the background back to normal
             this.cameras.main.setBackgroundColor('#ccccff');
 
+            // Swap player activity
             players[nextPlayerIndex].hasControl = true;
 
-            // Swap player activity
-            // players[0].hasControl = !players[0].hasControl;
-            // players[1].hasControl = !players[1].hasControl;
-            // make inactive player gray(???)
-            //
+
             // Create next swapPlayers event
             this.time.addEvent({
                 delay: 3000,
@@ -166,11 +161,9 @@ function collectCoin(sprite, tile) {
 
 function update(time, delta) {
 
-    /** playermanager.js */
     players.forEach((player, index) => {
       player.update(playerCursors[index]);
     });
-    /** end playermanager.js */
 }
 
 class Player {
