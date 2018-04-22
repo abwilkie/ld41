@@ -40,6 +40,8 @@ Unlike in macOS, Grunt won't automatically open a tab in a browser. Open [http:/
 ## Credits
 Game design and development:
 - [Sam Backus](https://github.com/sbackus)
+- [Alex Wilkie](https://github.com/abwilkie)
+- [Henry Morgan](https://github.com/hmorgancode)
 
 ## Assets
 ship https://opengameart.org/content/ship-tx-01
