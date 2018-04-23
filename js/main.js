@@ -110,7 +110,9 @@ function create() {
     players[0].hasControl = true;
 
     coinLayer.setTileIndexCallback(17, collectCoin, this);
-    fireLayer.setTileIndexCallback(19, dieInAFire, this);
+    for (var i = 18; i < 23; i++) {
+        fireLayer.setTileIndexCallback(i, dieInAFire, this);
+    }
 
     Player.createAnims(this)
 
