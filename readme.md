@@ -2,7 +2,7 @@
 ## (a game built in 72 hours for Ludum Dare #41)
 
 ## Hosted Version
-coming soon!
+http://divorcetepus.bitballoon.com/
 
 ## Local Setup on macOS
 Run the following from the directory:
