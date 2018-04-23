@@ -50,7 +50,7 @@ function preload() {
     // simple coin image
     this.load.image('coin', 'assets/coin.png');
     // simple fire images
-    this.load.image('fire', 'assets/lightning.png');
+    this.load.image('fire', 'assets/fire.png');
 
     // load sfx
     this.load.audio('jump', ['assets/jump.mp3']);
