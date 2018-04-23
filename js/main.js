@@ -48,7 +48,7 @@ function preload() {
     // simple coin image
     this.load.image('coin', 'assets/coin.png');
     // simple fire images
-    this.load.image('fire', 'assets/fire.png');
+    this.load.image('fire', 'assets/lightning.png');
 
     // load sfx
     this.load.audio('jump', ['assets/jump.mp3']);
@@ -61,9 +61,13 @@ function preload() {
     this.load.audio('splat', ['assets/splat.mp3']);
 
     Player.preload(this);
+
+    this.load.plugin('AnimatedTiles', '../dist/AnimatedTiles.js');
 }
 
 function create() {
+    this.sys.install('AnimatedTiles');
+
     /** mapcreate.js */
     // load the map
     map = this.make.tilemap({key: 'map'});
@@ -85,6 +89,7 @@ function create() {
     var fireTiles = map.addTilesetImage('fire');
     // add coins as tiles
     fireLayer = map.createDynamicLayer('Hazards', fireTiles, 0, 0);
+    this.sys.animatedTiles.init(map);
 
     // set the boundaries of our game world
     this.physics.world.bounds.width = groundLayer.width;
