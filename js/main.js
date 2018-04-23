@@ -301,10 +301,7 @@ function scoreDeficit(players) {
 
 function update(time, delta) {
     timeSinceGameStarted = time;
-
-
-
-    if (coinsCollected >= 6) {
+    if (coinsCollected >= totalCoins){
       gameOver = true;
       gameOverText.visible = true;
       const reducer = (highestScore, player) => Math.max(highestScore, player.score);
