@@ -1,6 +1,6 @@
 class Player {
   constructor(scene, playerNumber) {
-    this.sprite = scene.physics.add.sprite(100 * playerNumber, 200, 'player1');
+    this.sprite = scene.physics.add.sprite(100 * playerNumber, 200, `player${playerNumber - 1}`);
     this.scene = scene;
     this.turnTimer = 3000;
     this.lastFrameWasOnGround = false;
@@ -73,9 +73,11 @@ class Player {
         this.splatSound.play();
     }
 
-    if (!this.hasControl && this.sprite.body.onFloor()) {
-        this.sprite.body.setVelocityX(0);
-        this.lastFrameWasOnGround = true;
+    if (!this.hasControl) {
+        if (this.sprite.body.onFloor()) {
+            this.sprite.body.setVelocityX(0);
+            this.lastFrameWasOnGround = true;
+        }
         return;
     }
     if (cursor.left.isDown)
