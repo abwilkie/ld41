@@ -238,6 +238,13 @@ function dieInAFire(sprite, tile) {
     sprite.y = selectedSpawn.y;
     this.cameras.main.setBackgroundColor('#AA0000');
     dieSound.play();
+
+    // Pause to appreciate your brief time on this world
+    this.time.addEvent({
+        delay: 250,
+        callbackScope: this,
+        callback: restoreBackground
+    })
     return false;
 }
 
@@ -297,6 +304,11 @@ function update(time, delta) {
       turnTimerText.setText(timeDiffString);
     }
 }
+
+function restoreBackground() {
+    this.cameras.main.setBackgroundColor('#ccccff');
+}
+
 
 function currentPlayer() {
     return players.find((player) => player.hasControl);
