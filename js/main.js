@@ -300,9 +300,16 @@ function scoreDeficit(players) {
 function update(time, delta) {
     timeSinceGameStarted = time;
 
-    if (coinsCollected >= totalCoins) {
+
+
+    if (coinsCollected >= 6) {
       gameOver = true;
       gameOverText.visible = true;
+      const reducer = (highestScore, player) => Math.max(highestScore, player.score);
+      const winningScore = players.reduce(reducer,0);
+
+      winner = players.find((player)=>player.score === winningScore);
+      gameOverText.setText(`Player${winner.playerIndex+1} is the winner!`);
     }
     else {
       players.forEach((player, index) => {
