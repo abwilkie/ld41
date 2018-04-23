@@ -37,6 +37,8 @@ var totalCoins = 62;
 var coinsCollected = 0;
 var shoveSounds;
 var shoveSoundIndex;
+var gameOverText;
+var gameOver;
 
 function preload() {
     // 'this' === Scene object
@@ -159,6 +161,15 @@ function create() {
     helpText.setScrollFactor(0);
     helpText.originX = 0.5;
 
+    gameOverText = this.add.text(400, 300, 'Game Over', {
+        fontSize: '40px',
+        fill: '#ffffff',
+        align: 'center'
+    });
+    gameOverText.setScrollFactor(0);
+    gameOverText.visible = false;
+    gameOverText.originX = 0.5;
+
     // Create sounds
     coinSound = this.sound.add('coin',{loop: false});
     dieSound = this.sound.add('die', {loop: false});
@@ -170,6 +181,10 @@ function create() {
 }
 
 function swapPlayers() {
+    if(gameOver){
+      return
+    }
+
     // Gray out the background for a second
     this.cameras.main.setBackgroundColor('#777777');
 
@@ -281,12 +296,13 @@ function scoreDeficit(players) {
     return deficit;
 }
 
+
 function update(time, delta) {
     timeSinceGameStarted = time;
 
-    if (coinsCollected === totalCoins) {
-      // ???
-      console.log('coin');
+    if (coinsCollected >= totalCoins) {
+      gameOver = true;
+      gameOverText.visible = true;
     }
     else {
       players.forEach((player, index) => {

@@ -42,13 +42,10 @@ Game design and development:
 - [Sam Backus](https://github.com/sbackus)
 - [Alex Wilkie](https://github.com/abwilkie)
 - [Henry Morgan](https://github.com/hmorgancode)
+- [Aniket Schneider](https://github.com/aniketschneider)
 
-## Assets
-ship https://opengameart.org/content/ship-tx-01
-planet https://opengameart.org/content/big-gas-type-planet
-
-
-
+Sound Design and Art:
+- [Alex Wilkie](https://github.com/abwilkie)
 
 ## This project was based on the Phaser Project Template
 
