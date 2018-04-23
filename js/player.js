@@ -100,6 +100,7 @@ class Player {
     } else {
         this.sprite.body.setVelocityX(0);
         this.sprite.anims.play(`idle${this.playerIndex}`, true);
+        this.moveSounds[this.playerIndex].stop();
     }
     // jump
     if (cursor.up.isDown && this.sprite.body.onFloor())
